@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.map.mapper.BeanMapMapper">
+  <select id="findAll" resultType="java.util.Map">
+    select * from customer
+  </select>
+  
+  <select id="findByLonAndLatRange" parameterType="java.util.Map" resultType="java.util.Map">
+      select * from customer
+      where lon between #{minX} and #{maxX}
+      and lat between #{minY} and #{maxY}
+
+  </select>
+
+    <insert id="insertList" parameterType="java.util.List">
+        insert into customer (name, local_position, lon, lat, remarks)
+        values 
+        <foreach collection="beanMapList" item="beanMap" separator=",">
+            (
+                #{beanMap.name},
+                #{beanMap.localPosition},
+                #{beanMap.lon},
+                #{beanMap.lat},
+                #{beanMap.remarks}
+            )
+        </foreach>
+
+    </insert>
+</mapper>

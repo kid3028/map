@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://webapi.amap.com/loca?key=dde9a18e27e1518c820d46b773e136c4"></script>
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <title>map</title>
+</head>
+<body>
+<!-- DIV需要指定宽高，才可以显示底图 -->
+<div id='map' style='width:800px; height:600px; margin: 0 auto'></div>
+
+<script type="text/javascript">
+    $(function () {
+        var location;
+        $.ajax({
+            type : "get",
+            data : {
+                    tableName : "customer",
+                    currentLon:102.719662,
+                    currentLat:25.038107,
+                    radius : 5
+            },
+            dataType : "json",
+            url : "/map/beanMap/list",
+            success : function(result) {
+                if(result.state) {
+                    location = result.data;
+                } else {
+                    alert("数据请求失败");
+                }
+
+                var loca = Loca.create('map', {
+                    mapStyle: 'amap://styles/red',
+                    zoom: 12,
+                    center: [102.719467,25.038207]
+                });
+
+                var layer = Loca.visualLayer({
+                    container: loca,
+                    type: 'point',
+                    shape: 'circle'
+                });
+
+                // 传入原始数据
+                layer.setData(location, {
+                    lnglat: 'lnglat'   // 指定坐标数据的来源，数据格式: 经度在前，维度在后，数组格式。
+                });
+
+                // 配置样式
+                layer.setOptions({
+                    style: {
+                        radius: 5,     // 圆形半径，单位像素
+                        fill: 'red', // 填充颜色
+                        lineWidth: 0.5,   // 边框宽度
+                        stroke: '#ffffff'  // 边框颜色
+                    }
+                });
+                layer.render();
+            },
+            error : function () {
+                alert("网络错误");
+            }
+        });
+
+
+    })
+
+
+
+
+
+
+</script>
+</body>
+</html>
